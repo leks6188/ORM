@@ -2,7 +2,11 @@ import sqlalchemy
 from sqlalchemy import ForeignKey
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
 
-DSN = 'postgresql://postgres:246564@localhost:5432/Books'
+login_db = 'postgres'
+password_db = 'postgres'
+name_db = ''
+
+DSN = f'postgresql://{login_db}:{password_db}@localhost:5432/{name_db}'
 engine = sqlalchemy.create_engine(DSN)
 
 Base = declarative_base()
