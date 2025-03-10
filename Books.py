@@ -73,12 +73,35 @@ sale = [Sale(price=10, date_sale='2025-03-07', id_stock=2, count = 2),
 session.add_all(new_publisher + books + shops + stock + sale)
 session.commit()
 
-name_publisher = "Бродский"
+
+# Вариант 1:
+name_publisher = input('Введите имя или id писателя:')
 Books = (session.query(Book).join(Publisher).join(Stock).join(Shop).join(Sale)
-         .filter(Publisher.name == name_publisher).all())
+         .filter(Publisher.name == name_publisher or Publisher.id == name_publisher).all())
 for book in Books:
     for stock in book.stocks:
         for sale in stock.sales:
             print(f"""Название книги:{book.title}, Магазин:{stock.shop.name},
                   Цена:{sale.price}, Дата: {sale.date_sale}""")
-session.close()            
+
+
+# Вариант 2:
+
+def get_shops(name_publisher=input('Введите имя или id писателя:')):
+    if name_publisher.isdigit():
+        key_publisher = name_publisher
+        keyfilter = Publisher.id
+
+    else:
+        key_publisher = name_publisher
+        keyfilter = Publisher.name
+
+    Books = (session.query(Book).join(Publisher).join(Stock).join(Shop).join(Sale)
+             .filter(keyfilter == key_publisher).all())
+    for book in Books:
+        for stock in book.stocks:
+            for sale in stock.sales:
+                print(f"""Название книги:{book.title}, Магазин:{stock.shop.name},
+                      Цена:{sale.price}, Дата: {sale.date_sale}""")
+session.close()
+get_shops()
